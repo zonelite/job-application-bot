@@ -43,9 +43,24 @@ else:  # Default to gmail
     IMAP_SERVER = GMAIL_IMAP_SERVER
     IMAP_PORT = GMAIL_IMAP_PORT
 
-# Ollama
+# LLM Configuration - Choose: "ollama" or "groq"
+LLM_PROVIDER = os.getenv("LLM_PROVIDER", "groq").lower()
+
+# Ollama Configuration (local)
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "mistral")
+
+# Groq Cloud Configuration (free, fast API)
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "mixtral-8x7b-32768")  # Free models available
+
+# Set LLM credentials based on provider
+if LLM_PROVIDER == "groq":
+    if not GROQ_API_KEY:
+        raise ValueError("GROQ_API_KEY required when LLM_PROVIDER=groq. Get it from https://console.groq.com")
+else:
+    # Ollama is the fallback
+    LLM_PROVIDER = "ollama"
 
 # Application Settings
 MAX_APPLICATIONS_PER_DAY = int(os.getenv("MAX_APPLICATIONS_PER_DAY", 5))
